@@ -1,0 +1,39 @@
+@startuml Zone
+package entities {
+    abstract class Zone {
+        - types: List<TypeAnimal>
+        - noms: List<String>
+        - comportements: List<ComportementAnimal>
+        + abstract calculerKgsNourritureParJour(): double
+        + addAnimal(typeAnimal: TypeAnimal, nomAnimal: String, comportement: ComportementAnimal): void
+        + afficherListeAnimaux(): void
+        + compterAnimaux(): int
+    }
+
+    class Aquarium {
+        + calculerKgsNourritureParJour(): double
+        + addAnimal(nomAnimal: String): void
+    }
+
+    class FermeReptile {
+        + compterAnimaux(): int
+        + calculerKgsNourritureParJour(): double
+        + addAnimal(nomAnimal: String): void
+    }
+
+    class SavaneAfricaine {
+        + calculerKgsNourritureParJour(): double
+        + addAnimal(nomAnimal: String): void
+    }
+
+    class ZoneCarnivore {
+        + calculerKgsNourritureParJour(): double
+        + addAnimal(nomAnimal: String): void
+    }
+}
+
+Aquarium --|> Zone
+FermeReptile --|> Zone
+SavaneAfricaine --|> Zone
+ZoneCarnivore --|> Zone
+@enduml

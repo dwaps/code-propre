@@ -1,0 +1,14 @@
+@startuml Enums
+package enums {
+    enum ComportementAnimal {
+        HERBIVORE,
+        CARNIVORE
+    }
+
+    enum TypeAnimal {
+        MAMMIFERE,
+        POISSON,
+        SERPENT
+    }
+}
+@enduml

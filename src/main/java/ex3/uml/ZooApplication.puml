@@ -1,0 +1,9 @@
+@startuml
+!include ./includes/Zoo.puml
+
+class ZooApplication {
+    + main(args: String[]): void
+}
+
+ZooApplication --> Zoo
+@enduml

@@ -1,0 +1,25 @@
+@startuml Zoo
+!include Enums.puml
+!include Zone.puml
+
+class Zoo {
+    - nom: String
+    - savaneAfricaine: SavaneAfricaine
+    - zoneCarnivore: ZoneCarnivore
+    - fermeReptile: FermeReptile
+    - aquarium: Aquarium
+    + Zoo(nom: String)
+    + addMammifereHerbivore(nomAnimal: String): void
+    + addMammifereCarnivore(nomAnimal: String): void
+    + addSerpent(nomAnimal: String): void
+    + addPoisson(nomAnimal: String): void
+    + afficherListeAnimaux(): void
+    + getNom(): String
+    + setNom(nom: String): void
+}
+
+Zoo *-- SavaneAfricaine
+Zoo *-- ZoneCarnivore
+Zoo *-- FermeReptile
+Zoo *-- Aquarium
+@enduml
