@@ -1,123 +1,174 @@
 package ex2;
 
-/** Représente un compte bancaire de type compte courante (type=CC) ou livret A (type=LA)
+/**
+ * Représente un compte bancaire de type compte courante (type=CC) ou livret A
+ * (type=LA)
+ * 
  * @author DIGINAMIC
  */
 public class CompteBancaire {
 
 	/** solde : solde du compte */
 	private double solde;
-	
-	/** decouvert : un découvert est autorisé seulement pour les comptes courants */
-	private double decouvert;
-	
+
+	/**
+	 * decouvertAutorise : montant de découvert autorisé pour les comptes courants
+	 */
+	private double decouvertAutorise;
+
 	/** tauxRemuneration : taux de rémunération dans le cas d'un livret A */
 	private double tauxRemuneration;
-	
-	/** Le type vaut soit CC=Compte courant, ou soit LA=Livret A */
+
+	/** Le type de compte : soit CC=Compte courant, soit LA=Livret A */
 	private String type;
-	
+
 	/**
-	 * @param solde
-	 * @param decouvert
-	 * @param type
+	 * Construit un compte bancaire avec les informations spécifiées.
+	 * 
+	 * @param type      le type de compte (CC pour compte courant, LA pour livret A)
+	 * @param solde     le solde initial du compte
+	 * @param decouvert le montant de découvert autorisé pour les comptes courants
 	 */
 	public CompteBancaire(String type, double solde, double decouvert) {
 		super();
 		this.type = type;
 		this.solde = solde;
-		this.decouvert = decouvert;
+		this.decouvertAutorise = decouvert;
 	}
-	
-	
-	/** Ce constructeur est utilisé pour créer un compte de type Livret A
-	 * @param type = LA
-	 * @param solde représente le solde du compte
-	 * @param decouvert  représente le découvert autorisé
-	 * @param tauxRemuneration  représente le taux de rémunération du livret A
+
+	/**
+	 * Construit un compte de type Livret A avec les informations spécifiées.
+	 * 
+	 * @param type             le type de compte (LA pour livret A)
+	 * @param solde            le solde initial du compte
+	 * @param decouvert        le montant de découvert autorisé pour les comptes
+	 *                         courants
+	 * @param tauxRemuneration le taux de rémunération annuelle du livret A
 	 */
 	public CompteBancaire(String type, double solde, double decouvert, double tauxRemuneration) {
 		super();
 		this.type = type;
 		this.solde = solde;
-		this.decouvert = decouvert;
+		this.decouvertAutorise = decouvert;
 		this.tauxRemuneration = tauxRemuneration;
 	}
-	
-	/** Ajoute un montant au solde
-	 * @param montant
+
+	/**
+	 * Ajoute un montant au solde du compte.
+	 * 
+	 * @param montant le montant à ajouter au solde
 	 */
-	public void ajouterMontant(double montant){
+	public void ajouterMontant(double montant) {
 		this.solde += montant;
 	}
-	
-	/** Ajoute un montant au solde
-	 * @param montant
+
+	/**
+	 * Débite un montant du solde du compte.
+	 * 
+	 * Pour les comptes courants (type CC), le montant peut être retiré même s'il ne
+	 * reste pas assez d'argent sur le compte, mais le montant de découvert autorisé
+	 * ne peut pas être dépassé.
+	 * Pour les livrets A (type LA), le montant ne peut pas être retiré si cela
+	 * entraîne un solde négatif.
+	 * 
+	 * @param montant le montant à débiter du solde
 	 */
-	public void debiterMontant(double montant){
-		if (type.equals("CC")){
-			if (this.solde - montant > decouvert){
-				this.solde = solde - montant;
-			}	
-		}
-		else if (type.equals("LA")){
-			if (this.solde - montant > 0){
-				this.solde = solde - montant;
-			}	
-		}
-	}
-	
-	public void appliquerRemuAnnuelle(){
-		if (type.equals("LA")){
-			this.solde = solde + solde*tauxRemuneration/100;
+	public void debiterMontant(double montant) {
+		if (type.equals("CC")) {
+			if (this.solde - montant >= -this.decouvertAutorise) {
+				this.solde -= montant;
+			}
+		} else if (type.equals("LA")) {
+			if (this.solde >= montant) {
+				this.solde -= montant;
+			}
 		}
 	}
-	
-	/** Getter for solde
-	 * @return the solde
+
+	/**
+	 * Applique la rémunération annuelle sur le solde du compte, dans le cas d'un
+	 * livret A.
+	 * 
+	 * Le montant de rémunération est calculé en fonction du solde actuel et du taux
+	 * de rémunération annuelle.
+	 * 
+	 * @see CompteBancaire#tauxRemuneration
+	 */
+	public void appliquerRemunerationAnnuelle() {
+		if (type.equals("LA")) {
+			double remuneration = this.solde * this.tauxRemuneration / 100;
+			this.solde += remuneration;
+		}
+	}
+
+	/**
+	 * Retourne le solde actuel du compte.
+	 * 
+	 * @return le solde du compte
 	 */
 	public double getSolde() {
 		return solde;
 	}
-	
-	/** Setter
-	 * @param solde the solde to set
+
+	/**
+	 * Définit le solde du compte.
+	 * 
+	 * @param solde le solde à définir pour le compte
 	 */
 	public void setSolde(double solde) {
 		this.solde = solde;
 	}
-	/** Getter for decouvert
-	 * @return the decouvert
+
+	/**
+	 * Retourne le montant de découvert autorisé pour les comptes courants.
+	 * 
+	 * @return le montant de découvert autorisé
 	 */
-	public double getDecouvert() {
-		return decouvert;
+	public double getDecouvertAutorise() {
+		return decouvertAutorise;
 	}
-	/** Setter
-	 * @param decouvert the decouvert to set
+
+	/**
+	 * Définit le montant de découvert autorisé pour les comptes courants.
+	 * 
+	 * @param decouvertAutorise le montant de découvert autorisé à définir
 	 */
-	public void setDecouvert(double decouvert) {
-		this.decouvert = decouvert;
+	public void setDecouvertAutorise(double decouvertAutorise) {
+		this.decouvertAutorise = decouvertAutorise;
 	}
-	/** Getter for tauxRemuneration
-	 * @return the tauxRemuneration
+
+	/**
+	 * Retourne le taux de rémunération annuelle du livret A.
+	 * 
+	 * @return le taux de rémunération annuelle du livret A
 	 */
 	public double getTauxRemuneration() {
 		return tauxRemuneration;
 	}
-	/** Setter
-	 * @param tauxRemuneration the tauxRemuneration to set
+
+	/**
+	 * Définit le taux de rémunération annuelle du livret A.
+	 * 
+	 * @param tauxRemuneration le taux de rémunération annuelle à définir pour le
+	 *                         livret A
 	 */
 	public void setTauxRemuneration(double tauxRemuneration) {
 		this.tauxRemuneration = tauxRemuneration;
 	}
-	/** Getter for type
-	 * @return the type
+
+	/**
+	 * Retourne le type de compte (CC pour compte courant, LA pour livret A).
+	 * 
+	 * @return le type de compte
 	 */
 	public String getType() {
 		return type;
 	}
-	/** Setter
-	 * @param type the type to set
+
+	/**
+	 * Définit le type de compte (CC pour compte courant, LA pour livret A).
+	 * 
+	 * @param type le type de compte à définir
 	 */
 	public void setType(String type) {
 		this.type = type;
